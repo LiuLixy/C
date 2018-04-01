@@ -1,0 +1,21 @@
+#include<stdio.h>
+int main()
+{
+	int m, n, r, temp;
+	printf("请输入两个正整数m,n:");
+	scanf("%d%d,", &m, &n);
+	if (m < n)
+	{
+		temp = n;
+		n = m;
+		m = temp;
+	}
+	while (r = m%n != 0)  //当余数r=0时跳出while循环
+	{
+		r = m%n;
+		m = n;
+		n = r;
+	}
+	printf("它们的最大公约数为:%d\n", n);
+	return 0;
+}

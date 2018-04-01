@@ -1,0 +1,11 @@
+#include<stdio.h>
+int main()
+{
+	int num = 0;
+	char string[100];
+	printf("请输入整数:>");
+	scanf("%d", &num);
+	itoa(num, string, 2);
+	printf("二进制数为:%s", string);
+	return 0;
+}
