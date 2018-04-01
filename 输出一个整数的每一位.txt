@@ -1,5 +1,5 @@
 #include<stdio.h>
-//µÝ¹é
+//é€’å½’
 void print(int n)
 {
 	if (n < 0)
@@ -12,7 +12,7 @@ void print(int n)
 int main()
 {
 	int num = 0;
-	printf("ÇëÊäÈëÒ»¸öÕûÊý:>");
+	printf("Ã‡Ã«ÃŠÃ¤ÃˆÃ«Ã’Â»Â¸Ã¶Ã•Ã»ÃŠÃ½:>");
 	scanf("%d", &num);
 	print(num);
 	return 0;
