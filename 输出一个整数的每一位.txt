@@ -1,5 +1,5 @@
 #include<stdio.h>
-//递归
+//閫掑綊
 void print(int n)
 {
 	if (n < 0)
@@ -12,7 +12,7 @@ void print(int n)
 int main()
 {
 	int num = 0;
-	printf("请输入一个整数:>");
+	printf("Please Enter:>");
 	scanf("%d", &num);
 	print(num);
 	return 0;
