@@ -85,15 +85,164 @@ void LinkListReversePrint(LinkNode* head) {
 	printf("%c ", head->data);
 }
 
+//删除一个无头单链表的非尾节点（不能遍历链表）
+void LinkListErase(LinkNode** head, LinkNode* pos)
+{
+	if (head == NULL || pos == NULL) {
+		//非法输入
+		return;
+	}
+	if (*head == NULL) {
+		//空链表
+		return;
+	}
+	if (pos->next == NULL) {
+		return;
+	}
+	LinkNode* to_delete = pos->next;
+	pos->data = to_delete->data;
+	pos->next = to_delete->next;
+	LinkListDestroyNode(to_delete);
+	return;
+}
 
+//在无头单链表的一个节点前插入一个节点（不能遍历链表）
+void LinkListInsertBefore(LinkNode** head, LinkNode* pos, LinkType value) {
+	if (head == NULL) {
+		return;
+	}
+	if (*head == NULL) {
+		*head = LinkListCreateNode(value);
+		return;
+	}
+	if (*head == pos) {
+		LinkNode* new_node = LinkListCreateNode(value);
+		new_node->next = pos;
+		*head = new_node;
+		return;
+	}
+	LinkNode* cur = *head;
+	while (cur->next != pos && cur->next != NULL) {
+		cur = cur->next;
+	}
+	LinkNode* new_node = LinkListCreateNode(value);
+	cur->next = new_node;
+	new_node->next = pos;
+	return;
+}
+
+//单链表实现约瑟夫环(JosephCircle)
+LinkNode* JosephCycle(LinkNode* head, size_t food) {
+	if (head == NULL) {
+		return;
+	}
+	LinkNode* cur = head;
+	while(cur->next != cur){
+		size_t i = 1;
+		for (; i < food; i++) {
+			cur = cur->next;
+		}
+		LinkNode* to_delete = cur->next;
+		cur->data = to_delete->data;
+		cur->next = to_delete->next;
+		LinkListDestroyNode(to_delete);
+	}
+	return cur;
+}
+
+//逆置/反转单链表
+LinkNode* LinkListReverse(LinkNode** head) {
+	if (head == NULL) {
+		return NULL;
+	}
+	if (*head == NULL || (*head)->next == NULL) {
+		return head;
+	}
+	LinkNode* ptr = NULL;
+	LinkNode* cur = *head;
+	while (cur != NULL) {
+		LinkNode* tmp = cur;
+		cur = cur->next;
+		tmp->next = ptr;
+		ptr = tmp;
+	}
+	return ptr;
+}
+
+//单链表排序（冒泡排序）
+void LinkListBubbleSort(LinkNode* head) {
+	if (head == NULL) {
+		return;
+	}
+	LinkNode* cur = head;
+	while (cur != NULL) {
+		LinkNode* ptr = head;
+		while (ptr != cur) {
+			if (ptr->data > ptr->next->data) {
+				LinkType tmp = ptr->data;
+				ptr->data = ptr->next->data;
+				ptr->next->data = tmp;
+			}
+			ptr = ptr->next;
+		}
+		cur = cur->next;
+	}
+}
+
+//合并两个有序链表,合并后依然有序
+LinkNode* LinkListMerge(LinkNode* head1, LinkNode* head2)
+{
+	if (head1 == NULL) {
+		return head2;
+	}
+	if (head2 == NULL) {
+		return head1;
+	}
+	LinkNode* head = NULL;
+	LinkNode* cur1 = head1;
+	LinkNode* cur2 = head2;
+	if (cur1->data > cur2->data) {
+		head = cur2;
+		cur2 = cur2->next;
+	} else if(cur1->data < cur2->data) {
+		head = cur1;
+		cur1 = cur1->next;
+	} else {
+		head = cur1;
+		cur1 = cur1->next;
+		cur2 = cur2->next;
+	}
+	LinkNode* cur = head;
+	while (cur1 != NULL && cur2 != NULL) {
+		if (cur1->data > cur2->data) {
+			cur->next = cur2;
+			cur2 = cur2->next;
+		} else if(cur1->data < cur2->data){
+			cur->next = cur1;
+			cur1 = cur1->next;
+		}
+		else {
+			cur->next = cur1;
+			cur1 = cur1->next;
+			cur2 = cur2->next;
+		}
+		cur = cur->next;
+	}
+	if (cur1 != NULL) {
+		cur->next = cur1;
+	}
+	if (cur2 != NULL) {
+		cur->next = cur2;
+	}
+	return head;
+}
 
 //////////////////////////////
 ///////以下是测试代码//////////
 //////////////////////////////
 #define TEST_HEADER printf("\n==============%s==============\n", __FUNCTION__)
 
-void LinkListPrintChar(LinkNode *head, const char* msg)
-{
+void LinkListPrintChar(LinkNode *head, const char* msg) {
 	printf("[%s]: ", msg);
 	LinkNode* cur = head;
 	for (; cur != NULL; cur = cur->next) {
@@ -102,8 +251,7 @@ void LinkListPrintChar(LinkNode *head, const char* msg)
 	printf("[NULL]\n\n");
 }
 
-void TestReversePrint()
-{
+void TestReversePrint() {
 	TEST_HEADER;
 	LinkNode* head;
 	LinkListInit(&head);
@@ -115,8 +263,114 @@ void TestReversePrint()
 	LinkListReversePrint(head);
 }	
 
-int main()
+void TestErase() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListErase(&head, NULL);
+	LinkListPrintChar(head, "尝试对空链表删除");
+	LinkNode* pos_a = LinkListPushBack(&head, 'a');
+	LinkNode* pos_b = LinkListPushBack(&head, 'b');
+	LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'd');
+	LinkListPrintChar(head, "尾插四个元素");
+	LinkListErase(&head, pos_b);
+	LinkListPrintChar(head, "删除元素b");
+	LinkListErase(&head, pos_a);
+	LinkListPrintChar(head, "删除元素a");
+}
+
+void TestInsertBefore() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListInsertBefore(&head, head, 'b');
+	LinkListPrintChar(head, "对空链表插入");
+	LinkListInsertBefore(&head, head, 'a');
+	LinkListPrintChar(head, "往链表头部插入");
+	LinkListPushBack(&head, 'c');
+	LinkNode* pos_e = LinkListPushBack(&head, 'e');
+	LinkListInsertBefore(&head, pos_e, 'd');
+	LinkListPrintChar(head, "往e之前插入d");
+}
+
+void TestJosephCycle() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkNode* pos_a = LinkListPushBack(&head, 'a');
+	LinkListPushBack(&head, 'b');
+	LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'd');
+	LinkListPushBack(&head, 'e');
+	LinkListPushBack(&head, 'f');
+	LinkNode* pos_g = LinkListPushBack(&head, 'g');
+	pos_g->next = pos_a;
+	LinkNode* pos = JosephCycle(head, 3);
+	printf("%c\n", pos->data);
+}
+
+void TestReverse() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListPushBack(&head, 'a');
+	LinkListPushBack(&head, 'b');
+	LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'd');
+	LinkListPushBack(&head, 'e');
+	LinkListPushBack(&head, 'f');
+	LinkListPrintChar(head, "尾插7个元素");
+	LinkNode* ret = LinkListReverse(&head);
+	LinkListPrintChar(ret, "逆置后");
+}
+
+void TestBubbleSort() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'b');
+	LinkListPushBack(&head, 'a');
+	LinkListPushBack(&head, 'd');
+	LinkListPrintChar(head, "排序前");
+	LinkListBubbleSort(head);
+	LinkListPrintChar(head, "排序后");
+}
+
+void TestMerge()
 {
+	TEST_HEADER;
+	LinkNode* head1;
+	LinkListInit(&head1);
+	LinkListPushBack(&head1, 'a');
+	LinkListPushBack(&head1, 'c');
+	LinkListPushBack(&head1, 'd');
+	LinkListPushBack(&head1, 'g');
+	LinkListPushBack(&head1, 'j');
+	LinkListPrintChar(head1, "head1");
+	LinkNode* head2;
+	LinkListInit(&head2);
+	LinkListPushBack(&head2, 'a');
+	LinkListPushBack(&head2, 'b');
+	LinkListPushBack(&head2, 'd');
+	LinkListPushBack(&head2, 'f');
+	LinkListPushBack(&head2, 'h');
+	LinkListPushBack(&head2, 'j');
+	LinkListPrintChar(head2, "head2");
+	LinkNode* head;
+	LinkListInit(&head);
+	head = LinkListMerge(head1, head2);
+	LinkListPrintChar(head, "合并后");
+}
+
+int main() {
+	TestErase();
 	TestReversePrint();
+	TestInsertBefore();
+	TestJosephCycle();
+	TestReverse();
+	TestBubbleSort();
+	TestMerge();
 	return 0;
 }
