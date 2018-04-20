@@ -1,11 +1,14 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<windows.h>
 
 typedef char LinkType;
 
 typedef struct LinkNode {
 	LinkType data;
 	struct LinkNode* next;
-}LinkNode；
+}LinkNode;
+
 
 void LinkListInit(LinkNode **head) {
 	if (head == NULL) {
@@ -43,8 +46,7 @@ LinkNode* LinkListPushBack(LinkNode** head, LinkType value) {
 	return cur->next;
 }
 
-void LinkListPopBack(LinkNode** head)
-{
+void LinkListPopBack(LinkNode** head) {
 	if (head == NULL) {
 		//非法输入
 		return;
@@ -74,12 +76,25 @@ void LinkListPopBack(LinkNode** head)
 	return;
 }
 
+size_t LinkListSize(LinkNode* head) {
+	if (head == NULL) {
+		return 0;
+	}
+	size_t size = 0;
+	LinkNode* cur = head;
+	while (cur != NULL) {
+		++size;
+		cur = cur->next;
+	}
+	return size;
+}
+
 //从尾到头打印单链表
 void LinkListReversePrint(LinkNode* head) {
 	if (head == NULL) {
 		return;
 	}
-	if (hear->next != NULL){
+	if (head->next != NULL) {
 		LinkListReversePrint(head->next);
 	}
 	printf("%c ", head->data);
@@ -137,7 +152,7 @@ LinkNode* JosephCycle(LinkNode* head, size_t food) {
 		return;
 	}
 	LinkNode* cur = head;
-	while(cur->next != cur){
+	while (cur->next != cur) {
 		size_t i = 1;
 		for (; i < food; i++) {
 			cur = cur->next;
@@ -190,8 +205,7 @@ void LinkListBubbleSort(LinkNode* head) {
 }
 
 //合并两个有序链表,合并后依然有序
-LinkNode* LinkListMerge(LinkNode* head1, LinkNode* head2)
-{
+LinkNode* LinkListMerge(LinkNode* head1, LinkNode* head2) {
 	if (head1 == NULL) {
 		return head2;
 	}
@@ -204,10 +218,12 @@ LinkNode* LinkListMerge(LinkNode* head1, LinkNode* head2)
 	if (cur1->data > cur2->data) {
 		head = cur2;
 		cur2 = cur2->next;
-	} else if(cur1->data < cur2->data) {
+	}
+	else if (cur1->data < cur2->data) {
 		head = cur1;
 		cur1 = cur1->next;
-	} else {
+	}
+	else {
 		head = cur1;
 		cur1 = cur1->next;
 		cur2 = cur2->next;
@@ -217,7 +233,8 @@ LinkNode* LinkListMerge(LinkNode* head1, LinkNode* head2)
 		if (cur1->data > cur2->data) {
 			cur->next = cur2;
 			cur2 = cur2->next;
-		} else if(cur1->data < cur2->data){
+		}
+		else if (cur1->data < cur2->data) {
 			cur->next = cur1;
 			cur1 = cur1->next;
 		}
@@ -237,9 +254,44 @@ LinkNode* LinkListMerge(LinkNode* head1, LinkNode* head2)
 	return head;
 }
 
-//////////////////////////////
-///////以下是测试代码//////////
-//////////////////////////////
+//查找链表的中间节点，要求只能遍历一遍链表
+LinkNode* FindMidNode(LinkNode* head) {
+	if (head == NULL) {
+		return;
+	}
+	LinkNode* fast = head;
+	LinkNode* slow = head;
+	while (fast != NULL && fast->next != NULL) {
+		slow = slow->next;
+		fast = fast->next->next;
+	}
+	return slow;
+}
+
+//查找单链表的倒数第K个节点，要求只能遍历一遍链表
+LinkNode* FindLastKNode(LinkNode* head, size_t k) {
+	if (head == NULL) {
+		return NULL;
+	}
+	size_t size = LinkListSize(head);
+	if (k < 0 || k > size) {
+		return NULL;
+	}
+	LinkNode* fast = head;
+	LinkNode* slow = head;
+	while (--k) {
+		fast = fast->next;
+	}
+	while (fast != NULL && fast->next != NULL) {
+		slow = slow->next;
+		fast = fast->next;
+	}
+	return slow;
+}
+
+///////////////////////////////
+///////以下是测试代码///////////
+///////////////////////////////
 #define TEST_HEADER printf("\n==============%s==============\n", __FUNCTION__)
 
 void LinkListPrintChar(LinkNode *head, const char* msg) {
@@ -261,7 +313,7 @@ void TestReversePrint() {
 	LinkListPushBack(&head, 'd');
 	LinkListPrintChar(head, "尾插四个元素");
 	LinkListReversePrint(head);
-}	
+}
 
 void TestErase() {
 	TEST_HEADER;
@@ -320,7 +372,7 @@ void TestReverse() {
 	LinkListPushBack(&head, 'd');
 	LinkListPushBack(&head, 'e');
 	LinkListPushBack(&head, 'f');
-	LinkListPrintChar(head, "尾插7个元素");
+	LinkListPrintChar(head, "尾插6个元素");
 	LinkNode* ret = LinkListReverse(&head);
 	LinkListPrintChar(ret, "逆置后");
 }
@@ -364,6 +416,38 @@ void TestMerge()
 	LinkListPrintChar(head, "合并后");
 }
 
+void TestFindMid() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListPushBack(&head, 'a');
+	LinkListPushBack(&head, 'b');
+	LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'd');
+	LinkListPushBack(&head, 'e');
+	LinkListPushBack(&head, 'f');
+	LinkListPushBack(&head, 'g');
+	LinkListPrintChar(head, "尾插7个元素");
+	LinkNode* ret = FindMidNode(&head);
+	printf("ret expect d, actual %c\n", ret->data);
+}
+
+void TestFindLastKNode() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListPushBack(&head, 'a');
+	LinkListPushBack(&head, 'b');
+	LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'd');
+	LinkListPushBack(&head, 'e');
+	LinkListPushBack(&head, 'f');
+	LinkListPushBack(&head, 'g');
+	LinkListPrintChar(head, "尾插7个元素");
+	LinkNode* ret = FindLastKNode(&head, 2);
+	printf("ret expect f, expect %c\n", ret->data);
+}
+
 int main() {
 	TestErase();
 	TestReversePrint();
@@ -372,5 +456,8 @@ int main() {
 	TestReverse();
 	TestBubbleSort();
 	TestMerge();
+	TestFindMid();
+	TestFindLastKNode();
+	system("pause");
 	return 0;
 }
