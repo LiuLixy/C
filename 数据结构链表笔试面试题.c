@@ -289,6 +289,43 @@ LinkNode* FindLastKNode(LinkNode* head, size_t k) {
 	return slow;
 }
 
+//判断链表是否带环
+LinkNode* HasCycle(LinkNode* head) {
+	if (head == NULL) {
+		return NULL;
+	}
+	LinkNode* fast = head;
+	LinkNode* slow = head;
+	while (fast != NULL && fast->next != NULL) {
+		fast = fast->next->next;
+		slow = slow->next;
+		if (fast == slow) {
+			return slow;
+		}
+	}
+	return NULL;
+}
+
+//如果带环求环的长度
+size_t GetCycleLen(LinkNode* head) {
+	LinkNode* fast = head;
+	LinkNode* slow = head;
+	while (fast != NULL && fast->next != NULL) {
+		fast = fast->next->next;
+		slow = slow->next;
+		if (slow == fast) {
+			LinkNode* cur = slow->next;
+			size_t len = 1;
+			while (cur != slow) {
+				cur = cur->next;
+				len++;
+			}
+			return len;
+		}
+	}
+	return 0;
+}
+
 ///////////////////////////////
 ///////以下是测试代码///////////
 ///////////////////////////////
@@ -448,6 +485,40 @@ void TestFindLastKNode() {
 	printf("ret expect f, expect %c\n", ret->data);
 }
 
+void TestHasCycle() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListPushBack(&head, 'a');
+	LinkListPushBack(&head, 'b');
+	LinkNode* pos_c = LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'd');
+	LinkListPushBack(&head, 'e');
+	LinkListPushBack(&head, 'f');
+	LinkNode* pos_g = LinkListPushBack(&head, 'g');
+	LinkNode* ret = HasCycle(head);
+	printf("HasCycle expect 0, actual %d\n", ret);
+	pos_g->next = pos_c;
+    ret = HasCycle(head);
+	printf("HasCycle expect 1, actual %d\n", ret->data);
+}
+
+void TestGetCycleLen() {
+	TEST_HEADER;
+	LinkNode* head;
+	LinkListInit(&head);
+	LinkListPushBack(&head, 'a');
+	LinkListPushBack(&head, 'b');
+	LinkListPushBack(&head, 'c');
+	LinkListPushBack(&head, 'd');
+	LinkListPushBack(&head, 'e');
+	LinkListPushBack(&head, 'f');
+	LinkNode* pos_g = LinkListPushBack(&head, 'g');
+	pos_g->next = head;
+	size_t ret = GetCycleLen(head);
+	printf("Cyclelen expect 7, actual %lu\n", ret);
+}
+
 int main() {
 	TestErase();
 	TestReversePrint();
@@ -458,6 +529,8 @@ int main() {
 	TestMerge();
 	TestFindMid();
 	TestFindLastKNode();
+	TestHasCycle();
+	TestGetCycleLen();
 	system("pause");
 	return 0;
 }
