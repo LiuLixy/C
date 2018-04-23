@@ -326,6 +326,25 @@ size_t GetCycleLen(LinkNode* head) {
 	return 0;
 }
 
+
+//求环的入口
+LinkNode* GetCycleEntry(LinkNode* head) {
+	if(head == NULL) {
+		return NULL;
+	}
+	LinkNode* ret = HasCycle(head);
+	LinkNode* cur = head;
+	if(ret == NULL) {
+		return NULl;
+	}
+	while (cur != ret) {
+		cur = cur->next;
+		ret = ret->next;
+	}
+	return ret;
+}
+
+
 ///////////////////////////////
 ///////以下是测试代码///////////
 ///////////////////////////////
