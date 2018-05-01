@@ -22,29 +22,53 @@ typedef struct SeqStack {
 } SeqStack;
 
 void TreeInit(TreeNode** root);
+
 void PreOrder(TreeNode* root);     //先序遍历
+
 void InOrder(TreeNode* root);      //中序遍历
+
 void PostOrder(TreeNode* root);    //后序遍历
+
 TreeNode* CreateTreeNode(TreeNodeType value);
+
 TreeNode* TreeCreate(TreeNodeType array[], size_t size, TreeNodeType null_node);
+
 void TreeDestory(TreeNode** root);
+
 TreeNode* TreeClone(TreeNode* root);
+
 size_t TreeSize(TreeNode* root);
+
 size_t TreeLeafSize(TreeNode* root);
+
 size_t TreeKLevelSize(TreeNode* root, int K);
+
 size_t TreeHeight(TreeNode* root);
+
 TreeNode* TreeFind(TreeNode* root, TreeNodeType to_find);
+
 TreeNode* LChild(TreeNode* node);
+
 TreeNode* RChild(TreeNode* node);
+
 TreeNode* Parent(TreeNode* root, TreeNode* node);
+
 void SeqStackInit(SeqStack* stack);
+
 void SeqStackPush(SeqStack* stack, SeqStackType value);
+
 void SeqStackPop(SeqStack* stack);
+
 int GetTop(SeqStack* stack, SeqStackType* value);
+
 void PreOrderByLoop(TreeNode* root);//非递归的方法实现先序遍历  
+
 void InOrderByLoop(TreeNode* root);//非递归的方法实现中序遍历
+
 void PostOrderByLoop(TreeNode* root);//非递归的方法实现后序遍历
+
 void TreeMirror(TreeNode* root);//二叉树的翻转
+
 
 //////////////////////////////////////////////////////////////////////////////
 ///////我是分割线
