@@ -2,7 +2,8 @@
 //bin_tree.h
 #pragma once
 
-#include<stddef.h>
+#include <stdlib.h>
+#include <stddef.h>
 
 typedef char TreeNodeType;
 
@@ -76,7 +77,6 @@ void TreeMirror(TreeNode* root);//二叉树的翻转
 
 //bin_tree.c
 #include"Bin_Tree.h"
-#include<stdlib.h>
 
 TreeNode* CreateTreeNode(TreeNodeType value)
 {
