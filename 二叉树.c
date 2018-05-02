@@ -1,5 +1,5 @@
 //bin_tree.h
-//bin_tree.h
+
 #pragma once
 
 #include <stdlib.h>
