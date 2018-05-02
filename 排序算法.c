@@ -107,8 +107,9 @@ void ShellSort(int* arr, int len) {
 	assert(arr);
 	int h = 1;  //最后一次的步长为1
 
-	while (h < len / 3)
+	while (h < len / 3) {
 		h = 3 * h + 1;
+	}
 	while (h >= 1) {
 		int i = h;
 		int j = 0;
@@ -222,7 +223,6 @@ void QuickSort(int* arr, int len, int beg, int end) {
 		QuickSort(arr, len, beg, i);
 		QuickSort(arr, len, j, end);
 	}
-
 }
 
 int main() {
